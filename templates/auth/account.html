@@ -1,0 +1,30 @@
+{%extends 'shop/base.html'%}
+{%block css%}
+<style>
+    .cubical{
+        border: 1px solid#F7941D;
+        padding:15px;
+        
+        border-radius: 2px;
+    }
+    .cubical:hover{
+        background-color:bisque;
+        color:#F7941D;
+    }
+</style>
+{%endblock%}
+{%block body%}
+<div class="container my-4">
+    <div class="row offset-md-1" >
+        <div class="col-3 mx-4 cubical">
+            <a href="/myOrders/"> <h6>Orders</h6></a>
+        </div>
+        <div class="col-3 mx-4 cubical">
+            <a href="/wishlist/"> <h6> Wishlist</h6></a>
+        </div>
+        <div class="col-3 mx-4 cubical">
+            <h6>Edit Account</h6>
+        </div>
+    </div>
+</div>
+{%endblock%}

@@ -1,0 +1,127 @@
+{%extends 'shop/base.html'%}
+{%block body%}
+
+<section class="shop checkout section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-12">
+                
+                <div class="order-details">
+                    <!-- Order Widget -->
+                    <div class="single-widget">
+                        <h2>ORDER ITEMS</h2>
+                        
+                        <div class="content">
+                            <ul>
+                                {%for list in orderItems%}
+                                <li><img src="{{list.product.image}}" height="50px" width="50px">
+                                    &emsp;{{list.product.name}}&emsp;x{{list.qty}}<span>&#8377;{{list.amt}}</span></li>
+                                {%endfor%}
+                                <hr>
+                                <li>Sub Total<span>&#8377;{{subTot}}</span></li>
+                                
+                            </ul>
+                        </div>
+                    </div>
+                    <!--/ End Order Widget -->
+                    <!-- Order Widget -->
+                    <div class="single-widget">
+                        <h2>Contact</h2>
+                        <div class="content">
+                            <ul>
+                                <li>Name<span>{{address.name}}</span> </li>
+                                <li>Email<span>{{request.user.email}}</span> </li>
+                                <li>Phone Number<span>{{address.phone}}</span> </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!--/ End Order Widget -->
+                    
+                    <!-- Payment Method Widget -->
+                    <div class="single-widget payement">
+                        <div class="content">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/shoppingly-1e8fd.appspot.com/o/assets%2Fimages%2Fpayment-method.png?alt=media&token=e9e7ce4f-4b1c-42dc-b262-abe3b523c6f5"
+                                alt="#">
+                        </div>
+                    </div>
+                    <!--/ End Payment Method Widget -->
+                    <!-- Button Widget -->
+                    <div class="single-widget get-button">
+                        <div class="content">
+                            <div class="button">
+                                <button id="rzp-button1" class="btn">pay with razorpay</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/ End Button Widget -->
+                </div>
+            
+                
+            </div>
+            <div class="col-lg-4 col-12">
+                <div class="order-details">
+                    <!-- Order Widget -->
+                    <div class="single-widget">
+                        <h2>CART TOTALS</h2>
+                        
+                        <div class="content">
+                            <ul>
+                                <li>Sub Total<span>&#8377;{{subTot}}</span></li>
+                                <li>Shipping<span>FREE</span></li>
+                                {%if coupon%}
+                                <li>Savings<span style="color:green;">-&#8377;{{coupon.discount}}</span></li>
+                                <li>Coupon code<span style="font-size: smaller; color:gray;">{{coupon.code}}</span></li>
+                                {%endif%}
+                                <li class="last">Total<span>&#8377;{{order.amt}}</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!--/ End Order Widget -->
+                    <!-- Order Widget -->
+                    <div class="single-widget">
+                        <h2>Address</h2>
+                        <div class="content">
+                            <ul>
+                                <li>{{address.address}} </li>
+                                <li>{{address.state}}-{{address.pin}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!--/ End Order Widget -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--/ End Checkout -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        var options = {
+            "key": "{{key_id}}", // Enter the Key ID generated from the Dashboard    
+            "amount": "{{amount}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise    
+            "currency": "INR",
+            "name": "Shoppingly",
+            "description": "Test Transaction",
+            "image": "https://firebasestorage.googleapis.com/v0/b/shoppingly-1e8fd.appspot.com/o/assets%2Fimages%2Ffavicon.png?alt=media&token=5e11425f-f727-4122-94e3-109f38877dfd",
+            "order_id": "{{paymentId}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1    
+            "callback_url": "/success/",
+            "prefill": {
+                "name": "{{request.user.name}}",
+                "email": "{{request.user.email}}",
+                "contact": "{{request.user.phone}}"
+            },
+            "notes": {
+                "address": "{{request.user.email}}"
+            },
+            "theme": {
+                "color": "#F7941D"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        document.getElementById('rzp-button1').onclick = function (e) {
+            rzp1.open();
+            e.preventDefault();
+        }
+    </script>
+
+{%endblock%}

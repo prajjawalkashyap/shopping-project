@@ -1,0 +1,324 @@
+{%extends 'shop/base.html'%}
+{%block css%}
+<style>
+    .radio-tile-group {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: left;
+    }
+
+    /*set dimensions for invisible container*/
+    .input-container {
+        position: relative;
+        height: auto;
+        width: 15rem;
+        margin: 0.5rem;
+    }
+
+    .input-container:hover {
+        background-color: bisque;
+    }
+
+    /*make actual radio input invisible
+          /* + stretch to fill container*/
+    .radio-button {
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        cursor: pointer;
+    }
+
+    /*default tile styles*/
+    .radio-tile {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        border: 2px solid #F7941D;
+        border-radius: 5px;
+        padding: 1rem;
+        transition: transform 300ms ease;
+    }
+
+    .radio-tile-label {
+        text-align: center;
+        font-size: 0.75rem;
+
+        text-transform: uppercase;
+
+        color: black;
+    }
+
+    /*active tile styles*/
+    .radio-button:checked+.radio-tile {
+        background-color: bisque;
+        border: 2px solid #F7941D;
+        color: white;
+        transform: scale(1.1, 1.1);
+    }
+
+    #coupon {
+        width: 100%;
+        height: 45px;
+        line-height: 50px;
+        padding: 0 20px;
+        border-radius: 3px;
+        border-radius: 0px;
+        color: #333 !important;
+        border: none;
+        background: #F6F7FB;
+        
+    }
+</style>
+{%endblock%}
+{%block body%}
+
+<section class="shop checkout section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-12">
+                <div class="checkout-form">
+                    <h2>Make Your Checkout Here</h2>
+                    <p>Please register in order to checkout more quickly</p>
+                    <!-- Form -->
+
+                    <form class="form" method="post" action="/auth/address/submit/">{%csrf_token%}
+                        <div class="row">
+                            
+
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <div class="form-group">
+                                    <label>Email Address<span>*</span></label>
+                                    <input type="email" name="email" placeholder="" value="{{request.user.email}}"
+                                        readonly>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <div class="form-group">
+                                    <label>Name<span>*</span></label>
+                                    <input type="text" name="name" placeholder="Enter name"   required                                    >
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <div class="form-group">
+                                    <label>Phone Number<span>*</span></label>
+                                    <input type="number" name="number" placeholder="Enter Phone Number" required 
+                                        >
+                                </div>
+                            </div>
+
+
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <div class="form-group">
+                                    <label>Address<span>*</span></label>
+                                    <input type="text" name="address" placeholder="Address" required="required">
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <div class="form-group">
+                                    <label>State<span>*</span></label>
+                                    <select name="state" id="state-province" required>
+                                        <option selected>Choose...</option>
+                                        <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                        <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands
+                                        </option>
+                                        <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                        <option value="Assam">Assam</option>
+                                        <option value="Bihar">Bihar</option>
+                                        <option value="Chandigarh">Chandigarh</option>
+                                        <option value="Chhattisgarh">Chhattisgarh</option>
+                                        <option value="Dadar and Nagar Haveli">Dadar and Nagar Haveli</option>
+                                        <option value="Daman and Diu">Daman and Diu</option>
+                                        <option value="Delhi">Delhi</option>
+                                        <option value="Lakshadweep">Lakshadweep</option>
+                                        <option value="Puducherry">Puducherry</option>
+                                        <option value="Goa">Goa</option>
+                                        <option value="Gujarat">Gujarat</option>
+                                        <option value="Haryana">Haryana</option>
+                                        <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                        <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                                        <option value="Jharkhand">Jharkhand</option>
+                                        <option value="Karnataka">Karnataka</option>
+                                        <option value="Kerala">Kerala</option>
+                                        <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                        <option value="Maharashtra">Maharashtra</option>
+                                        <option value="Manipur">Manipur</option>
+                                        <option value="Meghalaya">Meghalaya</option>
+                                        <option value="Mizoram">Mizoram</option>
+                                        <option value="Nagaland">Nagaland</option>
+                                        <option value="Odisha">Odisha</option>
+                                        <option value="Punjab">Punjab</option>
+                                        <option value="Rajasthan">Rajasthan</option>
+                                        <option value="Sikkim">Sikkim</option>
+                                        <option value="Tamil Nadu">Tamil Nadu</option>
+                                        <option value="Telangana">Telangana</option>
+                                        <option value="Tripura">Tripura</option>
+                                        <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                        <option value="Uttarakhand">Uttarakhand</option>
+                                        <option value="West Bengal">West Bengal</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <div class="form-group">
+                                    <label>Postal Code<span>*</span></label>
+                                    <input type="number" name="zip" placeholder="Postal code" required="required">
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <div class="form-group">
+                                    <label>Address Type<span>*</span></label>
+                                    <select name="type" required>
+                                        <option value="Home">Home</option>
+                                        <option value="Work">Work</option>
+                                    </select>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                        <!-- Button Widget -->
+                        <div class="single-widget get-button">
+                            <div class="content">
+                                <div class="button">
+                                    <button type="submit" class="btn">save this address</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!--/ End Button Widget -->
+                    </form>
+
+                    <!--/ End Form -->
+                </div>
+                <hr>
+                <div>
+                    <form action="/order/pay/" method="POST" id="checkingOut">{%csrf_token%}
+                        <div class="radio-tile-group">
+                            {%for address in addresses%}
+                            <div class="input-container">
+                                <input id="ad{{address.id}}" value="{{address.id}}" class="radio-button" type="radio"
+                                    name="radio" required="required" {%if forloop.counter == 1%}checked{%endif%} />
+                                <div class="radio-tile">
+                                    <label for="ad{{address.id}}" class="radio-tile-label">
+                                        <strong>{{address.type}} </strong><br>
+                                        {{address.name}} <br>
+                                        {{address.phone}} <br>
+                                        {{address.address}} <br>
+                                        {{address.state}}-{{address.pin}}
+                                    </label>
+                                </div>
+                            </div>
+                            {%endfor%}
+                            <input type="hidden" name="couponCode" id="couponCode">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-lg-4 col-12">
+                <div class="order-details">
+                    <!-- Order Widget -->
+                    <div class="single-widget">
+                        <h2>CART TOTALS</h2>
+
+                        <div class="content">
+                            <ul>
+                                {%for list in cartList%}
+                                <li>{{list.product.name}}&nbsp;x{{list.quantity}}<span>&#8377;{{list.amt}}</span></li>
+                                {%endfor%}
+                                <hr>
+                                <li>Sub Total<span>&#8377;<span>{{total_amt}}</span></span></li>
+                                <li>Shipping<span>FREE</span></li>
+                                <li id="savingLi" style="display:none;">Savings<span id="savings">-&#8377;0.00</span></li>
+                                <li id="codeBlock" style="display:none;">Coupon code <span id="code" style="color: gray; font-size:smaller;"></span></li>
+                                
+                                <li class="last">Total<span>&#8377;<span id="total">{{total_amt}}</span></span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!--/ End Order Widget -->
+                    <div class="single-widget payement">
+                        <div class="content">
+                            <div class="row">
+                                <div class="form-group col-md-8">
+                                    <input type="text" name="coupon" id="coupon" placeholder="Coupon code">
+                                </div>
+                                <button class="btn col-md-4" onclick="couponCheck()">Apply</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Payment Method Widget -->
+                    <div class="single-widget payement">
+                        <div class="content">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/shoppingly-1e8fd.appspot.com/o/assets%2Fimages%2Fpayment-method.png?alt=media&token=e9e7ce4f-4b1c-42dc-b262-abe3b523c6f5"
+                                alt="#">
+                        </div>
+                    </div>
+                    <!--/ End Payment Method Widget -->
+                    <!-- Button Widget -->
+                    <div class="single-widget get-button">
+                        <div class="content">
+                            <div class="button">
+                                <button onclick="checkingOut()" class="btn">proceed to pay</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/ End Button Widget -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--/ End Checkout -->
+
+
+
+{%endblock%}
+{%block js%}(
+<script>
+    function checkingOut() {
+        document.getElementById('checkingOut').submit();
+    }
+    function couponCheck(){
+        var coupon=document.getElementById('coupon').value;
+        if(coupon !== ''){
+          var url = 'http://127.0.0.1:8000/coupon/check/'
+          fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrftoken,
+            },
+            body: JSON.stringify({ 'coupon':coupon })
+          })
+      
+            .then((response) => {
+              return response.json()
+            })
+            .then((data) => {
+              message=data['message']
+              error=data['error']
+              if(error=== 'None'){
+                document.getElementById('savingLi').style.display="block";
+                document.getElementById('savings').innerHTML="-&#8377;"+data['saving'].toString();
+                document.getElementById('savings').style.color="green";
+                document.getElementById('total').innerHTML=data['cartTotal'];
+                document.getElementById('codeBlock').style.display="block";
+                document.getElementById('code').innerHTML=data['code'];
+                document.getElementById('couponCode').value=data['code'];
+                
+              }
+              sendNotice(message);
+      
+            }
+            )}
+      }
+      
+</script>
+{%endblock%}

@@ -1,0 +1,267 @@
+{%extends 'shop/base.html'%}
+{%block css%}
+<style>
+  .qtyButtons {
+    display: inline-block;
+    margin-right: 10px;
+  }
+
+  .qtyButtons h6 {
+    display: inline-block;
+    margin-right: 10px;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .qtyButtons .input-group {
+    width: 151px;
+    display: inline-block;
+  }
+
+  .qtyButtons .buttonCart {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    display: inline-block;
+  }
+
+  .qtyButtons .buttonCart.minusCart {
+    left: 0;
+    border-radius: 0;
+    overflow: hidden;
+  }
+
+  .qtyButtons .buttonCart.plusCart {
+    right: 0;
+    border-radius: 0;
+    overflow: hidden;
+  }
+
+  .qtyButtons .buttonCart .btnCart {
+    padding: 0;
+    width: 35px;
+    height: 45px;
+    line-height: 45px;
+    border-radius: 0px;
+    background: transparent;
+    color: #282828;
+    font-size: 12px;
+    border: none;
+  }
+
+  .qtyButtons .buttonCart .btnCart:hover {
+    color: #F7941D;
+  }
+
+  .qtyButtons .input-quantity {
+    border: 1px solid #eceded;
+    width: 100%;
+    text-align: center;
+    height: 45px;
+    border-radius: 0px;
+    overflow: hidden;
+    padding: 0px 38px;
+  }
+</style>
+{%endblock%}
+{%block body%}
+<!-- Breadcrumbs -->
+<div class="breadcrumbs">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="bread-inner">
+                    <ul class="bread-list">
+                        <li><a href="/">Home<i class="fa fa-arrow-right"></i></a></li>
+                        <li class="active"><a href="/cart/">Cart</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Breadcrumbs -->
+
+<!-- Shopping Cart -->
+<div class="shopping-cart section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12" id="bold">
+                <!-- Shopping Summery -->
+                {%if items%}
+                <table id="table" class="table shopping-summery">
+                    <thead>
+                        <tr class="main-hading">
+                            <th>PRODUCT</th>
+                            <th>NAME</th>
+                            <th class="text-center">UNIT PRICE</th>
+                            <th class="text-center">QUANTITY</th>
+                            <th class="text-center">TOTAL</th>
+                            <th class="text-center"><i class="fa fa-trash remove-icon"></i></th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        {%for item in items%}
+                        <tr id="tr{{item.product.id}}">
+                            <td class="image" data-title="No">
+                                <img src="{{item.product.image}}" alt="#">
+                            </td>
+                            <td class="product-des" data-title="Description">
+                                <p class="product-name"><a href="/product/{{item.product.id}}">{{item.product.name}}</a></p>
+                                <p class="product-des">{{item.product.desc|slice:"0:40"}}...</p>
+                            </td>
+                            <td class="price" data-title="Price"><span>&#8377;{{item.product.price}} </span></td>
+                            <td class="qty" data-title="Qty">
+                                <div class="qtyButtons" id="carting">
+                                    <!-- Input Order -->
+                                    <div class="input-group">
+                          
+                                      <div class="buttonCart minusCart">
+                                        <button type="button" class="btnCart btn-primary btn-number" onclick="update('remove','{{item.product.id}}')">
+                                          
+                                          <i id="minusButton{{item.product.id}}" class="fa {%if item.quantity == 1%}fa-trash{%else%}fa-minus{%endif%}"></i>
+                                        </button>
+                                      </div>
+                          
+                                      <input id="cartQty{{item.product.id}}" class="input-quantity" value="{{item.quantity}}">
+                          
+                                      <div class="buttonCart plusCart">
+                                        <button type="button" class="btnCart btn-primary btn-number"  onclick="update('add','{{item.product.id}}')">
+                                          <i class="fa fa-plus"></i>
+                                        </button>
+                                      </div>
+                          
+                                    </div>
+                                    <!--/ End Input Order -->
+                                  </div>
+                            </td>
+                            <td class="total-amount">&#8377;<span id="sum{{item.product.id}}">{{item.amt}}</span></td>
+                            <td class="action" data-title="Remove">
+                              <button onclick="update('delete','{{item.product.id}}')"><i
+                                        class="fa fa-trash remove-icon"></i></button>
+                            </td>
+                        </tr>
+                        {%endfor%}
+
+                    </tbody>
+                </table>
+                {%else%}
+                <p class="text-center">Nothing in cart yet</p>
+                {%endif%}
+                <!--/ End Shopping Summery -->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <!-- Total Amount -->
+                <div class="total-amount">
+                    <div class="row">
+                        <div class="col-lg-8 col-md-5 col-12">
+                            <div class="left">
+                                
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-7 col-12">
+                            <div class="right">
+                                <ul>
+                                    <li>Cart Subtotal<span>&#8377;<span id="subTot">{{total}}</span></span></li>
+                                    <li>Shipping<span>Free</span></li>
+                                    
+                                    <li class="last">You Pay<span>&#8377;<span id="tot">{{total}}</span></span></li>
+                                </ul>
+                                <div class="button5">
+                                    {%if cartList%}
+                                    <a href="/checkout/" id="checkout" class="btn">Checkout</a>
+                                    {%endif%}
+                                    <a href="/" class="btn">Continue shopping</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--/ End Total Amount -->
+            </div>
+        </div>
+    </div>
+</div>
+<!--/ End Shopping Cart -->
+
+
+
+{%endblock%}
+{%block js%}
+<script>
+
+  function update(action, productId) {
+    if (user === 'AnonymousUser')
+      location.href = 'http://127.0.0.1:8000/auth/login/';
+    else {
+      updateUserOrder(productId, action);
+    }
+  }
+  function updateUserOrder(productId, action) {
+    var url = 'http://127.0.0.1:8000/update_item/'
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrftoken,
+      },
+      body: JSON.stringify({ 'productId': productId, 'action': action })
+    })
+
+      .then((response) => {
+        return response.json()
+      })
+      .then((data) => {
+        var pid = data['productId'].toString();
+        var qty = data['quantity'];
+        var sum=data['amt'];
+        var cartTotal=data['cartTotal'];
+        var pPrice=data['productPrice'];
+        var cartCount=data['cartCount'];       
+        if (qty === 0 ) {
+                document.getElementById("tr"+pid).style.display='none';
+        }
+        if(action==="delete"){
+          document.getElementById("tr"+pid).style.display='none';
+                cartTotal=cartTotal-(qty*pPrice)
+        }
+        var minus=document.getElementById('minusButton'+pid)
+        if(qty===1){
+          minus.className="fa fa-trash";
+        }
+        else{
+          minus.className="fa fa-minus"
+        }
+        document.getElementById('cartQty'+pid).value=qty;
+        document.getElementById('sum'+pid).innerHTML=sum;
+        var counting=0;
+        var inc=1;
+        if (action==="add"){
+            cartTotal=cartTotal+pPrice;
+            counting=parseInt(cartCount)+inc;
+            document.getElementById('cartCountPopover').innerHTML=counting;
+            document.getElementById('cartCountIn').innerHTML=counting;
+        }
+        else if(action==="remove"){
+            cartTotal=cartTotal-pPrice;
+            counting=parseInt(cartCount)-inc;
+            document.getElementById('cartCountPopover').innerHTML=counting;
+            document.getElementById('cartCountIn').innerHTML=counting;
+        }
+        document.getElementById('subTot').innerHTML=cartTotal;
+        document.getElementById('tot').innerHTML=cartTotal;
+        if(cartTotal===0){
+          document.getElementById('checkout').style.display="none";
+          document.getElementById('bold').innerHTML=" <p class='text-center'>Nothing in cart yet</p>";
+
+          sendNotice('Cart Empty!')
+        }
+      })
+  }
+
+
+
+</script>
+{%endblock%}

@@ -1,0 +1,516 @@
+{%extends 'shop/base.html'%}
+{%block css%}
+<style>
+  .qtyButtons {
+    display: inline-block;
+    margin-right: 10px;
+  }
+
+  .qtyButtons h6 {
+    display: inline-block;
+    margin-right: 10px;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .qtyButtons .input-group {
+    width: 151px;
+    display: inline-block;
+  }
+
+  .qtyButtons .buttonCart {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    display: inline-block;
+  }
+
+  .qtyButtons .buttonCart.minusCart {
+    left: 0;
+    border-radius: 0;
+    overflow: hidden;
+  }
+
+  .qtyButtons .buttonCart.plusCart {
+    right: 0;
+    border-radius: 0;
+    overflow: hidden;
+  }
+
+  .qtyButtons .buttonCart .btnCart {
+    padding: 0;
+    width: 35px;
+    height: 45px;
+    line-height: 45px;
+    border-radius: 0px;
+    background: transparent;
+    color: #282828;
+    font-size: 12px;
+    border: none;
+  }
+
+  .qtyButtons .buttonCart .btnCart:hover {
+    color: #F7941D;
+  }
+
+  .qtyButtons .input-quantity {
+    border: 1px solid #eceded;
+    width: 100%;
+    text-align: center;
+    height: 45px;
+    border-radius: 0px;
+    overflow: hidden;
+    padding: 0px 38px;
+  }
+
+  * {
+    box-sizing: border-box
+  }
+
+  .progressBar {
+    width: 100%;
+    height: 5px;
+    background-color: black;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 10px;
+  }
+
+  .starRate {
+    text-align: right;
+
+    height: 5px;
+    color: white;
+    border-radius: 20px;
+    background-color: #F7941D;
+  }
+
+  .rating-css div {
+    color: #F7941D;
+    font-size: 30px;
+    font-family: sans-serif;
+    font-weight: 800;
+
+    text-transform: uppercase;
+    padding: 20px 0;
+  }
+
+  .rating-css input {
+    display: none;
+  }
+
+  .rating-css input+label {
+    font-size: 20px;
+
+    cursor: pointer;
+  }
+
+  .rating-css input:checked+label~label {
+    color: black;
+  }
+
+  .rating-css label:active {
+    transform: scale(0.8);
+    transition: 0.3s ease;
+  }
+</style>
+{%endblock%}
+
+{%block body%}
+<div class="container">
+  <div class="row no-gutters">
+    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+      <!-- Product Slider -->
+      <div class="product-gallery">
+        <div class="quickview-slider-active">
+          <div class="single-slider">
+            <img src="{{product.image}}" alt="#">
+          </div>
+          <div class="single-slider">
+            <img src="{{product.image2}}" alt="#">
+          </div>
+          {%for med in media%}
+          <div class="single-slider">
+            <img src="{{med.media_link}}" alt="#">
+          </div>
+          {%endfor%}
+        </div>
+      </div>
+      <!-- End Product slider -->
+    </div>
+    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+      <div class="quickview-content">
+        <h2>{{product.name}}</h2>
+        <div class="quickview-ratting-review">
+
+          <div class="quickview-stock">
+            <span><i class="fa fa-check-circle-o"></i> in stock</span>
+          </div>
+        </div>
+        <strike>
+          <h3 style="color:gray; ">&#8377;{{product.mrp}}</h3>
+        </strike>
+        <h3>&#8377;{{product.price}}</h3>
+        <div class="quickview-peragraph">
+          <p>{{product.desc}}</p>
+          <br>
+        </div>
+        <!--<div class="size">
+          <div class="row">
+            <div class="col-lg-6 col-12">
+              <h5 class="title">Size</h5>
+              <select>
+                <option selected="selected">s</option>
+                <option>m</option>
+                <option>l</option>
+                <option>xl</option>
+              </select>
+            </div>
+          </div>
+        </div>-->
+        {%if cartItems %}
+
+        {%for items in cartItems%}
+        <div class="qtyButtons" id="carting">
+          <!-- Input Order -->
+          <div class="input-group">
+            <div class="buttonCart minusCart">
+              <button type="button" class="btnCart btn-primary btn-number" onclick="update('remove')">
+                <i id="minusButton" class="fa {%if items.quantity == 1%}fa-trash{%else%}fa-minus{%endif%}"></i>
+              </button>
+            </div>
+            <input id="cartQty" class="input-quantity" value="{{items.quantity}}">
+            <div class="buttonCart plusCart">
+              <button type="button" class="btnCart btn-primary btn-number" onclick="update('add')">
+                <i class="fa fa-plus"></i>
+              </button>
+            </div>
+          </div>
+          <!--/ End Input Order -->
+        </div>
+        <div class="add-to-cart">
+          <button type="button" id="add_to_cart" class="btn update-cart" onclick="update('add')"
+            style="display:none;">Add to cart</button>
+        </div>
+        {%endfor%}
+
+        {%else%}
+
+        <div class="qtyButtons" id="carting" style="display:none;">
+          <!-- Input Order -->
+          <div class="input-group">
+            <div class="buttonCart minusCart">
+              <button type="button" class="btnCart btn-primary btn-number" onclick="update('remove')">
+
+                <i id="minusButton" class="fa fa-trash-o"></i>
+
+              </button>
+            </div>
+            <input id="cartQty" class="input-quantity" value="{{items.quantity}}">
+            <div class="buttonCart plusCart">
+              <button type="button" class="btnCart btn-primary btn-number" onclick="update('add')">
+                <i class="fa fa-plus"></i>
+              </button>
+            </div>
+          </div>
+          <!--/ End Input Order -->
+        </div>
+
+        <div class="add-to-cart">
+          <button type="button" id="add_to_cart" class="btn update-cart" onclick="update('add')">Add to cart</button>
+        </div>
+        {%endif%}
+
+        <div class="add-to-cart">
+          {%if wishlist%}
+          <button data-toggle="tooltip" data-placement="right" title="Remove from Wishlist" data-action="remove"
+            class="btn min" id="remove_wish" onclick="wishList(this.id)">
+            <i class="fa fa-heart"></i>
+
+          </button>
+          {%else%}
+          <button data-action="add" data-toggle="tooltip" data-placement="right" title="Add to Wishlist" class="btn min"
+            id="add_wish" onclick="wishList(this.id)">
+            <i class="fa fa-heart"></i></button>
+
+          {%endif%}
+
+        </div>
+
+        <div class="default-social">
+          <h4 class="share-now">Share:</h4>
+          <ul>
+            <li><a class="facebook" href="#"><i class="fa fa-facebook"></i></a></li>
+            <li><a class="twitter" href="#"><i class="fa fa-twitter"></i></a></li>
+            <li><a class="youtube" href="#"><i class="fa fa-pinterest-p"></i></a></li>
+            <li><a class="dribbble" href="#"><i class="fa fa-google-plus"></i></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Start Contact -->
+  <section id="contact-us" class="contact-us section">
+    <div class="container">
+      <div class="contact-head">
+        <div class="row">
+          <div class="col-lg-8 col-12">
+            <div class="form-main">
+              <div class="title">
+                <h4>Review this Product</h4>
+                <h3>Write us a message</h3>
+              </div>
+              <div class="row">
+                <div class="col-4">
+                  <h1>Rating</h1> <br>
+                  <h3>{{avgStar}}</h3>
+                  <div class="align-items-center">
+                    <i class="yellow fa fa-star"></i>
+                    <i class="yellow fa fa-star"></i>
+                    <i class="yellow fa fa-star"></i>
+                    <i class="yellow fa fa-star"></i>
+                    <i class="fa fa-star"></i>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="row">
+                    <div class="col-2">5<i class="yellow fa fa-star"></i></div>
+                    <div class="col">
+                      <div class="progressBar">
+                        <div class="starRate" style="width: {{rate_list.5}}%">
+                          5
+                        </div>
+                      </div>
+                    </div>
+                    {{starCount.5}}
+                  </div>
+                  <div class="row">
+                    <div class="col-2">4<i class="yellow fa fa-star"></i></div>
+                    <div class="col">
+                      <div class="progressBar">
+                        <div class="starRate" style="width: {{rate_list.4}}%">
+                          4
+                        </div>
+                      </div>
+                    </div>
+                    {{starCount.4}}
+                  </div>
+                  <div class="row">
+                    <div class="col-2">3<i class="yellow fa fa-star"></i></div>
+                    <div class="col">
+                      <div class="progressBar">
+                        <div class="starRate" style="width: {{rate_list.3}}%">
+                          3
+                        </div>
+                      </div>
+                    </div>
+                    {{starCount.3}}
+                  </div>
+                  <div class="row">
+                    <div class="col-2">2<i class="yellow fa fa-star"></i></div>
+                    <div class="col">
+                      <div class="progressBar">
+                        <div class="starRate" style="width: {{rate_list.2}}%">
+                          2
+                        </div>
+                      </div>
+                    </div>
+                    {{starCount.2}}
+                  </div>
+                  <div class="row">
+                    <div class="col-2">1<i class="yellow fa fa-star"></i></div>
+                    <div class="col">
+                      <div class="progressBar">
+                        <div class="starRate" style="width: {{rate_list.1}}%">
+                          1
+                        </div>
+                      </div>
+                    </div>
+                    {{starCount.1}}
+                  </div>
+                </div>
+              </div>
+              <hr>
+              <h4 class="title">Product reviews:</h4>
+              {%if review%}
+              {%for rev in review %}
+              <strong>{{rev.user.name}}</strong> <br>
+              <i class="fa fa-star"></i>{{rev.rate}} <br>
+              {{rev.comment}}
+              <hr>
+              {%endfor%}
+              {%else%}
+              <h6 style="text-align: center;">No reviews <br>Be the first one to review this product</h6>
+              {%endif%}
+            </div>
+          </div>
+          <div class="col-lg-4 col-12" style="height:500px">
+            <div class="single-head">
+              <div class="single-info">
+
+                <h4 class="title">Write a review:</h4>
+                <ul>
+                  <li>
+
+                    <form class="form" method="post" action="/review/submit/">{%csrf_token%}
+                      <div class="row">
+                        <div class="row">
+                          <div class="col-3"><span>Rate: </span></div>
+                          <div class="col">
+                            <div class="rating-css">
+
+                              <div class="star-icon">
+                                <input type="radio" name="rating" id="rating1" value="1">
+                                <label for="rating1" class="fa fa-star"></label>
+                                <input type="radio" name="rating" id="rating2" value="2">
+                                <label for="rating2" class="fa fa-star"></label>
+                                <input type="radio" name="rating" id="rating3" value="3">
+                                <label for="rating3" class="fa fa-star"></label>
+                                <input type="radio" name="rating" id="rating4" value="4">
+                                <label for="rating4" class="fa fa-star"></label>
+                                <input type="radio" name="rating" id="rating5" value="5">
+                                <label for="rating5" class="fa fa-star"></label>
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+                        <br>
+                        <div class="col-12">
+                          <div class="form-group message">
+                            <label>Your comment:<span>*</span></label>
+                            <textarea name="review" placeholder=""></textarea>
+                          </div>
+                        </div>
+                        <input type="hidden" name="pid" value="{{product.id}}">
+                        <div class="col-12">
+                          <div class="form-group button">
+                            <button type="submit" class="btn ">Submit Review</button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </li>
+                  <li><strong>
+                </ul>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!--/ End Contact -->
+</div>
+{%endblock%}
+{%block js%}
+<script>
+
+  function update(action) {
+    var updateBtns = document.getElementsByClassName('update-cart')
+    var productId = "{{product.id}}";
+
+
+    if (user === 'AnonymousUser')
+      location.href = '/auth/login/';
+    else {
+      updateUserOrder(productId, action);
+
+    }
+  }
+  function updateUserOrder(productId, action) {
+
+    var url = 'http://127.0.0.1:8000/update_item/'
+
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrftoken,
+      },
+      body: JSON.stringify({ 'productId': productId, 'action': action })
+    })
+
+      .then((response) => {
+        return response.json()
+      })
+      .then((data) => {
+
+        var pid = data['productId'].toString();
+        var qty = data['quantity'];
+        var cartCount = data['cartCount'];
+        try {
+          var addBtn = document.getElementById('add_to_cart');
+          var cartItems = document.getElementById('carting');
+        }
+        catch {
+          console.log("Error occured")
+        }
+        if (qty === 0) {
+
+          cartItems.style.display = 'none';
+          addBtn.style.display = 'inline-block';
+        }
+        else {
+          cartItems.style.display = 'inline-block';
+          addBtn.style.display = 'none';
+        }
+        var minus = document.getElementById('minusButton')
+        if (qty === 1) {
+          minus.className = "fa fa-trash";
+        }
+        else {
+          minus.className = "fa fa-minus"
+        }
+        document.getElementById('cartQty').value = qty;
+        var counting = 0;
+        var inc = 1;
+        if (action === "add") {
+
+          counting = parseInt(cartCount) + inc;
+          document.getElementById('cartCountPopover').innerHTML = counting;
+          document.getElementById('cartCountIn').innerHTML = counting;
+        }
+        else if (action === "remove") {
+
+          counting = parseInt(cartCount) - inc;
+          document.getElementById('cartCountPopover').innerHTML = counting;
+          document.getElementById('cartCountIn').innerHTML = counting;
+        }
+      })
+  }
+
+
+  function wishList(id) {
+    var url = 'http://127.0.0.1:8000/update/wishlist/'
+    var productId = "{{product.id}}";
+    var doc = document.getElementById(id);
+    var action = doc.dataset.action;
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrftoken,
+      },
+      body: JSON.stringify({ 'productId': productId, 'action': action })
+    })
+
+      .then((response) => {
+        return response.json()
+      })
+      .then((data) => {
+        if (action === 'add') {
+          doc.title = "Remove from Wishlist"
+          doc.dataset.action = "remove";
+        }
+        else {
+          doc.title = "Add to Wishlist"
+          doc.dataset.action = "add";
+        }
+        sendNotice(data['message'])
+      })
+  }
+</script>
+{%endblock%}

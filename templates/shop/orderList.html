@@ -1,0 +1,102 @@
+{%extends 'shop/base.html'%}
+{%block body %}
+
+<section class="shop checkout section">
+    <div class="container">
+        {%if orders.values%}
+        {%for order in orders.values%}
+        <div class="row">
+            <div class="col-lg-8 col-12">
+                
+                <div class="order-details">
+                    <!-- Order Widget -->
+                    <div class="single-widget">
+                        <h2>ORDER ID: {{order.order.id}}</h2>
+                        
+                        <div class="content">
+                            <ul>
+                                {%for list in order.items%}
+                                <li><img src="{{list.product.image}}" height="50px" width="50px">
+                                    &emsp;{{list.product.name}}&emsp;x{{list.qty}}<span>&#8377;{{list.amt}}</span></li>
+                                {%endfor%}
+                                
+                            </ul>
+                        </div>
+                    </div>
+                    <!--/ End Order Widget -->
+                    <!-- Order Widget -->
+                    <div class="single-widget">
+                        <h2>Contact</h2>
+                        <div class="content">
+                            <ul>
+                                <li>Name<span>{{order.order.address.name}}</span> </li>
+                                <li>Email<span>{{order.order.user.email}}</span> </li>
+                                <li>Phone Number<span>{{order.order.address.phone}}</span> </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!--/ End Order Widget -->
+                    
+                    <div class="single-widget get-button">
+                        <div class="content">
+                            {%if order.payment.refund%}
+                            <p class="text-center">Order cancelled and refunded</p>
+                            {%else%}
+                            <div class="button">
+                                <a href="/cancel/order/{{order.order.id}}/" class="btn">cancel order</a>
+                            </div>
+                            {%endif%}
+                        </div>
+                    </div>
+                </div>
+            
+                
+            </div>
+            <div class="col-lg-4 col-12">
+                <div class="order-details">
+                    <!-- Order Widget -->
+                    <div class="single-widget">
+                        <h2>CART TOTALS</h2>
+                        
+                        <div class="content">
+                            <ul>
+                                <li>Sub Total<span>&#8377;{{order.order.actualAmt}}</span></li>
+                                <li>Shipping<span>FREE</span></li>
+                                {%if order.order.saved != 0%}
+                                <li>Savings <span style="color: green;">&#8377;{{order.order.saved}}</span></li>
+                                {%endif%}
+                                <li class="last">Total<span>&#8377;{{order.order.amt}}</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!--/ End Order Widget -->
+                    <!-- Order Widget -->
+                    <div class="single-widget">
+                        <h2>Address</h2>
+                        <div class="content">
+                            <ul>
+                                <li>{{order.order.address.address}} </li>
+                                <li>{{order.order.address.state}}-{{order.order.address.pin}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="single-widget">
+                        <h2>Status</h2>
+                        <div class="content">
+                            <ul>
+                                <li>{{order.order.get_status_display}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!--/ End Order Widget -->
+                </div>
+            </div>
+        </div>
+        {%endfor%}
+        {%else%}
+        <p class="text-center">No Orders yet</p>
+        {%endif%}
+    </div>
+</section>
+
+{%endblock%}

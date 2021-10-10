@@ -1,0 +1,77 @@
+{%extends 'shop/base.html'%}
+{%block body%}
+
+<div class="shopping-cart section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <!-- Shopping Summery -->
+                {%if wishlist%}
+                <table class="table shopping-summery">
+                    <thead>
+                        <tr class="main-hading">
+                            <th>PRODUCT</th>
+                            <th>NAME</th>
+                            <th class="text-center">UNIT PRICE</th>
+
+                            <th class="text-center"></th>
+                            <th class="text-center"><i class="fa fa-trash remove-icon"></i></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {%for item in wishlist%}
+                        <tr id="tr{{item.product.id}}">
+                            <td class="image" data-title="No">
+                                <img src="{{item.product.image}}" alt="#">
+                            </td>
+                            <td class="product-des" data-title="Description">
+                                <p class="product-name"><a href="#">{{item.product.name}}</a></p>
+                                <p class="product-des">{{item.product.desc|slice:"0:50"}}...</p>
+                            </td>
+                            <td class="price" data-title="Price"><span>&#8377;{{item.product.price}} </span></td>
+                            <td data-title="MoveToCart"><button class="btn"
+                                    onclick="moveToCart('{{item.product.id}}','move')">Move to cart</button></td>
+                            <td class="action" data-title="Remove">
+                                <button onclick="moveToCart('{{item.product.id}}','delete')">
+                                    <i class="fa fa-trash remove-icon"></i></button>
+                            </td>
+                        </tr>
+                        {%endfor%}
+
+                    </tbody>
+                </table>
+                {%else%}
+                <p class="text-center">Nothing in your Wishlist yet</p>
+                {%endif%}
+                <!--/ End Shopping Summery -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{%endblock%}
+{%block js%}
+<script>
+    function moveToCart(pid,action) {
+        var url = 'http://127.0.0.1:8000/moveToCart/'
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken,
+            },
+            body: JSON.stringify({ 'productId': pid , 'action': action})
+        })
+
+            .then((response) => {
+                return response.json()
+            })
+            .then((data) => {
+                document.getElementById('tr'+pid.toString()).innerHTML='';
+                sendNotice(data['message']);
+            })
+    }
+</script>
+{%endblock%}
